@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestion_projects/bloc/blocs.dart';
@@ -9,6 +10,7 @@ import 'package:gestion_projects/services/cafe_api.dart';
 import 'package:gestion_projects/services/services.dart';
 import 'package:gestion_projects/views/admin/projects/add_project.dart';
 import 'package:gestion_projects/views/admin/projects/projects_datasource.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ProjectView extends StatefulWidget {
   const ProjectView({super.key});
@@ -26,6 +28,7 @@ class _ProjectViewState extends State<ProjectView> {
 
   callAllProjects() async {
     debugPrint('obteniendo todos los proyectos');
+    CafeApi.configureDio();
     final projectBloc = BlocProvider.of<ProjectBloc>(context, listen: false);
     return CafeApi.httpGet(projects(null)).then((res) async {
       final projects = listProjectModelFromJson(json.encode(res.data['project']));
@@ -39,8 +42,10 @@ class _ProjectViewState extends State<ProjectView> {
 
     final categoriesDataSource = ProjectDataSource(
       projectBloc.state.listProject,
-      (teacher) => showEditCategory(context, teacher),
-      (teacher, state) => removeCategory(teacher, state),
+      (project) => showEditCategory(context, project),
+      (project, state) => removeCategory(project, state),
+      (project) => showSubjects(context, project),
+      (project) => showStudents(context, project),
     );
 
     return Padding(
@@ -66,7 +71,17 @@ class _ProjectViewState extends State<ProjectView> {
                           // teacherBloc.add(UpdateSortColumnIndexCategory(colIndex));
                         }),
                     DataColumn(
-                        label: const Text('Semestre'),
+                        label: const Text('Categoria'),
+                        onSort: (colIndex, _) {
+                          // teacherBloc.add(UpdateSortColumnIndexCategory(colIndex));
+                        }),
+                    DataColumn(
+                        label: const Text('Tipo de proyecto'),
+                        onSort: (colIndex, _) {
+                          // teacherBloc.add(UpdateSortColumnIndexCategory(colIndex));
+                        }),
+                    DataColumn(
+                        label: const Text('Descripcion'),
                         onSort: (colIndex, _) {
                           // teacherBloc.add(UpdateSortColumnIndexCategory(colIndex));
                         }),
@@ -84,6 +99,59 @@ class _ProjectViewState extends State<ProjectView> {
         ]));
   }
 
+  showSubjects(BuildContext context, ProjectModel project) {
+    return showBarModalBottomSheet(
+      enableDrag: false,
+      expand: false,
+      context: context,
+      builder: (context) => ModalComponent(
+        title: 'Materias',
+        child: SafeArea(
+          bottom: false,
+          child: ListView(
+            shrinkWrap: true,
+            controller: ModalScrollController.of(context),
+            children: ListTile.divideTiles(
+              context: context,
+              tiles: List.generate(
+                  project.subjectIDs.length,
+                  (index) => ListTile(
+                        title: Text(project.subjectIDs[index].name),
+                      )),
+            ).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  showStudents(BuildContext context, ProjectModel project) {
+    return showBarModalBottomSheet(
+      enableDrag: false,
+      expand: false,
+      context: context,
+      builder: (context) => ModalComponent(
+        title: 'Estudiantes',
+        child: SafeArea(
+          bottom: false,
+          child: ListView(
+            shrinkWrap: true,
+            controller: ModalScrollController.of(context),
+            children: ListTile.divideTiles(
+              context: context,
+              tiles: List.generate(
+                  project.studentIds.length,
+                  (index) => ListTile(
+                        title: Text(
+                            '${project.studentIds[index].name} ${project.studentIds[index].lastName} ${project.studentIds[index].code}'),
+                      )),
+            ).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
   void showAddTeacher(BuildContext context) {
     showDialog(
         context: context,
@@ -99,18 +167,18 @@ class _ProjectViewState extends State<ProjectView> {
   }
 
   removeCategory(ProjectModel project, bool state) {
-    // final categoryBloc = BlocProvider.of<CategoryBloc>(context, listen: false);
-    // CafeApi.configureDio();
-    // FormData formData = FormData.fromMap({
-    //   'state': state,
-    // });
-    // return CafeApi.put(deleteCategories(project.id), formData).then((res) async {
-    //   final categoryEdit = categoryItemModelFromJson(json.encode(res.data['categoria']));
-    //   categoryBloc.add(UpdateItemCategory(categoryEdit));
-    // }).catchError((e) {
-    //   debugPrint('e $e');
-    //   debugPrint('error en en : ${e.response.data['errors'][0]['msg']}');
-    //   callDialogAction(context, '${e.response.data['errors'][0]['msg']}');
-    // });
+    final projectBloc = BlocProvider.of<ProjectBloc>(context, listen: false);
+    CafeApi.configureDio();
+    FocusScope.of(context).unfocus();
+    FormData formData = FormData.fromMap({
+      'state': state,
+    });
+    return CafeApi.put(projects(project.id), formData).then((res) async {
+      final project = projectModelFromJson(json.encode(res.data['project']));
+      projectBloc.add(UpdateItemProject(project));
+    }).catchError((e) {
+      debugPrint('error en en : ${e.response.data['errors'][0]['msg']}');
+      callDialogAction(context, '${e.response.data['errors'][0]['msg']}');
+    });
   }
 }

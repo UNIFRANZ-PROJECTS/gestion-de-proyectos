@@ -4,8 +4,7 @@
 
 import 'dart:convert';
 
-import 'subject.model.dart';
-import 'user.model.dart';
+import 'package:gestion_projects/models/models.dart';
 
 ProjectModel projectModelFromJson(String str) => ProjectModel.fromJson(json.decode(str));
 
@@ -16,44 +15,44 @@ class ProjectModel {
     required this.subjectIDs,
     required this.studentIds,
     required this.state,
-    required this.responsible,
     required this.name,
     required this.description,
     required this.typeProyect,
     required this.category,
+    required this.responsible,
     required this.id,
   });
 
   List<SubjectModel> subjectIDs;
   List<UserModel> studentIds;
   bool state;
-  String responsible;
   String name;
   String description;
-  String typeProyect;
-  String category;
+  ElementModel typeProyect;
+  ElementModel category;
+  String responsible;
   String id;
 
   ProjectModel copyWith({
     List<SubjectModel>? subjectIDs,
     List<UserModel>? studentIds,
     bool? state,
-    String? responsible,
     String? name,
     String? description,
-    String? typeProyect,
-    String? category,
+    ElementModel? typeProyect,
+    ElementModel? category,
+    String? responsible,
     String? id,
   }) =>
       ProjectModel(
         subjectIDs: subjectIDs ?? this.subjectIDs,
         studentIds: studentIds ?? this.studentIds,
         state: state ?? this.state,
-        responsible: responsible ?? this.responsible,
         name: name ?? this.name,
         description: description ?? this.description,
         typeProyect: typeProyect ?? this.typeProyect,
         category: category ?? this.category,
+        responsible: responsible ?? this.responsible,
         id: id ?? this.id,
       );
 
@@ -61,11 +60,11 @@ class ProjectModel {
         subjectIDs: List<SubjectModel>.from(json["subjectIDs"].map((x) => SubjectModel.fromJson(x))),
         studentIds: List<UserModel>.from(json["studentIds"].map((x) => UserModel.fromJson(x))),
         state: json["state"],
-        responsible: json["responsible"],
         name: json["name"],
         description: json["description"],
-        typeProyect: json["typeProyect"],
-        category: json["category"],
+        typeProyect: ElementModel.fromJson(json["typeProyect"]),
+        category: ElementModel.fromJson(json["category"]),
+        responsible: json["responsible"],
         id: json["id"],
       );
 
@@ -73,11 +72,40 @@ class ProjectModel {
         "subjectIDs": List<dynamic>.from(subjectIDs.map((x) => x.toJson())),
         "studentIds": List<dynamic>.from(studentIds.map((x) => x.toJson())),
         "state": state,
-        "responsible": responsible,
         "name": name,
         "description": description,
-        "typeProyect": typeProyect,
-        "category": category,
+        "typeProyect": typeProyect.toJson(),
+        "category": category.toJson(),
+        "responsible": responsible,
         "id": id,
+      };
+}
+
+class Responsible {
+  Responsible({
+    required this.id,
+    required this.name,
+  });
+
+  String id;
+  String name;
+
+  Responsible copyWith({
+    String? id,
+    String? name,
+  }) =>
+      Responsible(
+        id: id ?? this.id,
+        name: name ?? this.name,
+      );
+
+  factory Responsible.fromJson(Map<String, dynamic> json) => Responsible(
+        id: json["_id"],
+        name: json["name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "name": name,
       };
 }

@@ -8,6 +8,8 @@ import 'package:gestion_projects/components/compoents.dart';
 import 'package:gestion_projects/models/models.dart';
 import 'package:gestion_projects/services/cafe_api.dart';
 import 'package:gestion_projects/services/services.dart';
+import 'package:gestion_projects/views/admin/teachers/add_info_teacher.dart';
+import 'package:printing/printing.dart';
 
 import 'add_teacher.dart';
 import 'teaachers_datasource.dart';
@@ -28,8 +30,10 @@ class _TeacherViewState extends State<TeacherView> {
 
   callAllTeachers() async {
     debugPrint('obteniendo todos los docentes');
+    CafeApi.configureDio();
     final teacherBloc = BlocProvider.of<TeacherBloc>(context, listen: false);
     return CafeApi.httpGet(teachers(null)).then((res) async {
+      debugPrint(json.encode(res.data['teacher']));
       final teachers = listTeacherModelFromJson(json.encode(res.data['teacher']));
       teacherBloc.add(UpdateListTeacher(teachers));
     });
@@ -52,6 +56,8 @@ class _TeacherViewState extends State<TeacherView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Lista de Docentes'),
+              ButtonComponent(text: 'Descargar excel', onPressed: () => downloadxlxs(context)),
+              ButtonComponent(text: 'Subir excel', onPressed: () => uploadxlxs(context)),
               ButtonComponent(text: 'Agregar nuevo Docente', onPressed: () => showAddTeacher(context)),
             ],
           ),
@@ -94,6 +100,22 @@ class _TeacherViewState extends State<TeacherView> {
             ),
           )
         ]));
+  }
+
+  void uploadxlxs(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const DialogWidget(
+              component: AddTeachersData(),
+            ));
+  }
+
+  downloadxlxs(BuildContext context) {
+    return CafeApi.httpGet(downloadTechers()).then((res) async {
+      debugPrint(' ressssss ${json.encode(res.data['base64'])}');
+      final bytes = base64Decode(res.data['base64']);
+      await Printing.sharePdf(bytes: bytes, filename: 'docentes.xlsx');
+    });
   }
 
   void showAddTeacher(BuildContext context) {

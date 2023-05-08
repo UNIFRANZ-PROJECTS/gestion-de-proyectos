@@ -12,6 +12,7 @@ class PermisionsDataSource extends DataTableSource {
     return DataRow.byIndex(index: index, cells: [
       DataCell(Text(user.id)),
       DataCell(Text(user.name)),
+      DataCell(Text(user.category)),
     ]);
   }
 

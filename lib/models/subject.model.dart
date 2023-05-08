@@ -15,6 +15,7 @@ class SubjectModel {
     required this.teacherIds,
     required this.state,
     required this.name,
+    required this.code,
     required this.semester,
     required this.id,
   });
@@ -22,6 +23,7 @@ class SubjectModel {
   List<TeacherModel> teacherIds;
   bool state;
   String name;
+  String code;
   int semester;
   String id;
 
@@ -29,6 +31,7 @@ class SubjectModel {
     List<TeacherModel>? teacherIds,
     bool? state,
     String? name,
+    String? code,
     int? semester,
     String? id,
   }) =>
@@ -36,6 +39,7 @@ class SubjectModel {
         teacherIds: teacherIds ?? this.teacherIds,
         state: state ?? this.state,
         name: name ?? this.name,
+        code: code ?? this.code,
         semester: semester ?? this.semester,
         id: id ?? this.id,
       );
@@ -44,6 +48,7 @@ class SubjectModel {
         teacherIds: List<TeacherModel>.from(json["teacherIds"].map((x) => TeacherModel.fromJson(x))),
         state: json["state"],
         name: json["name"],
+        code: json["code"],
         semester: json["semester"],
         id: json["id"],
       );
@@ -52,6 +57,7 @@ class SubjectModel {
         "teacherIds": List<dynamic>.from(teacherIds.map((x) => x.toJson())),
         "state": state,
         "name": name,
+        "code": code,
         "semester": semester,
         "id": id,
       };

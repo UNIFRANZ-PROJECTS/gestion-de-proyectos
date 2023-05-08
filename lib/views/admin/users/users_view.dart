@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestion_projects/bloc/blocs.dart';
 import 'package:gestion_projects/components/compoents.dart';
 import 'package:gestion_projects/models/models.dart';
+import 'package:gestion_projects/models/role.model.dart';
+import 'package:gestion_projects/models/type_user.model.dart';
+import 'package:gestion_projects/views/admin/users/add_info_users.dart';
 
 import 'package:gestion_projects/views/admin/users/add_user.dart';
 import 'package:gestion_projects/views/admin/users/users_datasource.dart';
@@ -22,8 +25,10 @@ class UsersView extends StatefulWidget {
 class _UsersViewState extends State<UsersView> {
   @override
   void initState() {
-    super.initState();
     callAllUsers();
+    callAllRoles();
+    callAllTypeUsers();
+    super.initState();
   }
 
 // UpdateListUser
@@ -34,6 +39,26 @@ class _UsersViewState extends State<UsersView> {
     return CafeApi.httpGet(users(null)).then((res) async {
       debugPrint(' ressssss ${json.encode(res.data['usuarios'])}');
       userBloc.add(UpdateListUser(listUserModelFromJson(json.encode(res.data['usuarios']))));
+    });
+  }
+
+  callAllRoles() async {
+    final rolBloc = BlocProvider.of<RolBloc>(context, listen: false);
+    debugPrint('obteniendo todos los roles');
+    CafeApi.configureDio();
+    return CafeApi.httpGet(roles(null)).then((res) async {
+      debugPrint(' ressssss ${json.encode(res.data['roles'])}');
+      rolBloc.add(UpdateListRol(rolesModelFromJson(json.encode(res.data['roles']))));
+    });
+  }
+
+  callAllTypeUsers() async {
+    final typeUserBloc = BlocProvider.of<TypeUserBloc>(context, listen: false);
+    debugPrint('obteniendo todos los tipos de usuarios');
+    CafeApi.configureDio();
+    return CafeApi.httpGet(typeUsers(null)).then((res) async {
+      debugPrint(' ressssss ${json.encode(res.data['tiposUsuarios'])}');
+      typeUserBloc.add(UpdateListTypeUser(typeUserModelFromJson(json.encode(res.data['tiposUsuarios']))));
     });
   }
 
@@ -52,6 +77,7 @@ class _UsersViewState extends State<UsersView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Lista de Usuarios'),
+              ButtonComponent(text: 'Subir excel', onPressed: () => subirexcel(context)),
               ButtonComponent(text: 'Agregar nuevo Usuario', onPressed: () => showCreateUser(context)),
             ],
           ),
@@ -95,6 +121,14 @@ class _UsersViewState extends State<UsersView> {
             ),
           )
         ]));
+  }
+
+  void subirexcel(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const DialogWidget(
+              component: AddUsersData(),
+            ));
   }
 
   showCreateUser(BuildContext context) {

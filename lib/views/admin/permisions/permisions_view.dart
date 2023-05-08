@@ -51,6 +51,7 @@ class _PermisionsViewState extends State<PermisionsView> {
             columns: [
               const DataColumn(label: Text('UID')),
               DataColumn(label: const Text('Nombre'), onSort: (colIndex, _) {}),
+              DataColumn(label: const Text('Categoría'), onSort: (colIndex, _) {}),
             ],
             source: usersDataSource,
             onPageChanged: (page) {

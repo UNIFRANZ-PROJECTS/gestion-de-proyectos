@@ -29,6 +29,10 @@ class Flurorouter {
   static String rolesRoute = '/dashboard/roles';
   //tipos de usuarios
   static String typeUsersRoute = '/dashboard/typeusers';
+  //categorias
+  static String categoriesRoute = '/dashboard/categories';
+  //tipos de proyectos
+  static String typeProjectsRoute = '/dashboard/typeprojects';
 
   static void configureRoutes() {
     router.define(rootRoute, handler: Home.home, transitionType: TransitionType.none);
@@ -48,6 +52,10 @@ class Flurorouter {
     router.define(rolesRoute, handler: DashboardHandlers.roles, transitionType: TransitionType.fadeIn);
     // Tipos de usuarios
     router.define(typeUsersRoute, handler: DashboardHandlers.typeUsers, transitionType: TransitionType.fadeIn);
+    // Categorias
+    router.define(categoriesRoute, handler: DashboardHandlers.categories, transitionType: TransitionType.fadeIn);
+    // Tipos de proyectos
+    router.define(typeProjectsRoute, handler: DashboardHandlers.typeProjects, transitionType: TransitionType.fadeIn);
     // 404 - Not Page Found
     router.notFoundHandler = NoPageFoundHandlers.noPageFound;
   }

@@ -40,6 +40,7 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
 
   callAllTeachers() async {
     debugPrint('obteniendo todos los docentes');
+    CafeApi.configureDio();
     final teacherBloc = BlocProvider.of<TeacherBloc>(context, listen: false);
     return CafeApi.httpGet(teachers(null)).then((res) async {
       final teachers = listTeacherModelFromJson(json.encode(res.data['teacher']));
@@ -61,19 +62,11 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
                 initPage: false,
               ),
               (size.width > 1000)
-                  ? Column(
-                      children: [
-                        Row(
-                          children: [...titleName()],
-                        ),
-                        Row(
-                          children: [...details()],
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [...titleName(), ...details()],
-                    ),
+                  ? Row(children: titleName())
+                  : Column(mainAxisSize: MainAxisSize.min, children: titleName()),
+              (size.width > 1000)
+                  ? Row(children: details())
+                  : Column(mainAxisSize: MainAxisSize.min, children: details()),
               !stateLoading
                   ? widget.item == null
                       ? ButtonComponent(text: 'Crear Materia', onPressed: () => createSubject())
@@ -94,7 +87,7 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
             textInputAction: TextInputAction.done,
             controllerText: nameCtrl,
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z ]")),
+              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z ÁÉÍÓÚáéíóúñÑ]")),
               LengthLimitingTextInputFormatter(100)
             ],
             onEditingComplete: () {},
@@ -115,7 +108,7 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
             textInputAction: TextInputAction.done,
             controllerText: codeCtrl,
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z@.]")),
+              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z ÁÉÍÓÚáéíóúñÑ()-]")),
               LengthLimitingTextInputFormatter(100)
             ],
             onEditingComplete: () {},
@@ -123,13 +116,13 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
               if (value.isNotEmpty) {
                 return null;
               } else {
-                return 'Apellido';
+                return 'Código';
               }
             },
             keyboardType: TextInputType.text,
             textCapitalization: TextCapitalization.characters,
-            labelText: "Apellido:",
-            hintText: "Apellido"),
+            labelText: "Código:",
+            hintText: "Código"),
       ),
     ];
   }
@@ -137,7 +130,8 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
   List<Widget> details() {
     final teacherBloc = BlocProvider.of<TeacherBloc>(context, listen: true).state;
 
-    final teachers = teacherBloc.listTeacher.map((e) => MultiSelectItem<TeacherModel>(e, e.name)).toList();
+    final teachers =
+        teacherBloc.listTeacher.map((e) => MultiSelectItem<TeacherModel>(e, '${e.name} ${e.lastName}')).toList();
     List<TeacherModel> filteredList = [];
     if (widget.item != null) {
       filteredList = teacherBloc.listTeacher.where((e) => widget.item!.teacherIds.any((i) => i.id == e.id)).toList();
@@ -147,10 +141,7 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
         child: InputComponent(
             textInputAction: TextInputAction.done,
             controllerText: semesterCtrl,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z ]")),
-              LengthLimitingTextInputFormatter(100)
-            ],
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9]")), LengthLimitingTextInputFormatter(2)],
             onEditingComplete: () {},
             validator: (value) {
               if (value.isNotEmpty) {
@@ -161,8 +152,8 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
             },
             keyboardType: TextInputType.text,
             textCapitalization: TextCapitalization.characters,
-            labelText: "Nombre:",
-            hintText: "Nombre"),
+            labelText: "Semestre:",
+            hintText: "Semestre"),
       ),
       Flexible(
           child: SelectMultiple(

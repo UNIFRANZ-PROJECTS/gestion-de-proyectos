@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:gestion_projects/views/admin/categories/categories_view.dart';
 import 'package:gestion_projects/views/admin/dashboard/dashboard_view.dart';
 import 'package:gestion_projects/provider/auth_provider.dart';
 import 'package:gestion_projects/provider/sidemenu_provider.dart';
@@ -9,6 +10,7 @@ import 'package:gestion_projects/views/admin/projects/projects_view.dart';
 import 'package:gestion_projects/views/admin/roles/roles_view.dart';
 import 'package:gestion_projects/views/admin/subjects/subjects_view.dart';
 import 'package:gestion_projects/views/admin/teachers/teachers_view.dart';
+import 'package:gestion_projects/views/admin/type_projects/type_projects_view.dart';
 import 'package:gestion_projects/views/admin/type_users/type_users_view.dart';
 import 'package:gestion_projects/views/home/home.dart';
 import 'package:provider/provider.dart';
@@ -103,6 +105,28 @@ class DashboardHandlers {
 
     if (authProvider.authStatus == AuthStatus.authenticated) {
       return const TypeUsersView();
+    } else {
+      return const HomeScreen();
+    }
+  });
+  // categorias
+  static Handler categories = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(Flurorouter.categoriesRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const CategoriesView();
+    } else {
+      return const HomeScreen();
+    }
+  });
+  // topos de proyectos
+  static Handler typeProjects = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(Flurorouter.typeProjectsRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const TypeProjectsView();
     } else {
       return const HomeScreen();
     }

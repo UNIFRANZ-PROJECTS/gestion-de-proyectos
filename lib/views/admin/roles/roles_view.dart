@@ -41,8 +41,12 @@ class _RolesViewState extends State<RolesView> {
   Widget build(BuildContext context) {
     final rolBloc = BlocProvider.of<RolBloc>(context, listen: true);
 
-    final usersDataSource = RolesDataSource(rolBloc.state.listRoles, (typeUser) => showEditRol(context, typeUser),
-        (typeUser, state) => removeRol(typeUser, state), (permisions) => showPermisions(context, permisions));
+    final usersDataSource = RolesDataSource(
+      rolBloc.state.listRoles,
+      (typeUser) => showEditRol(context, typeUser),
+      (typeUser, state) => removeRol(typeUser, state),
+      (permisions) => showPermisions(context, permisions),
+    );
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Column(children: [

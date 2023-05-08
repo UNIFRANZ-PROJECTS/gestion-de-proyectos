@@ -7,8 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gestion_projects/bloc/blocs.dart';
 import 'package:gestion_projects/components/compoents.dart';
 import 'package:gestion_projects/models/models.dart';
-import 'package:gestion_projects/models/role.model.dart';
-import 'package:gestion_projects/models/type_user.model.dart';
 
 import 'package:gestion_projects/services/cafe_api.dart';
 import 'package:gestion_projects/services/services.dart';
@@ -27,7 +25,6 @@ class _AddUserFormState extends State<AddUserForm> {
   TextEditingController lastNameCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController codeCtrl = TextEditingController();
-  List<String> carrerIds = [];
   bool stateLoading = false;
   String? idRolSelect; //✅
   String? idTypeUserSelect; //✅
@@ -35,38 +32,14 @@ class _AddUserFormState extends State<AddUserForm> {
   @override
   void initState() {
     super.initState();
-
-    callAllRoles();
-    callAllTypeUsers();
     if (widget.item != null) {
       setState(() {
         nameCtrl = TextEditingController(text: widget.item!.name);
         emailCtrl = TextEditingController(text: widget.item!.email);
         idRolSelect = widget.item!.rol.id;
         idTypeUserSelect = widget.item!.typeUser.id;
-        // carrerIds = [...widget.item!.careerIds.map((e) => e.id!).toList()];
       });
     }
-  }
-
-  callAllRoles() async {
-    final rolBloc = BlocProvider.of<RolBloc>(context, listen: false);
-    debugPrint('obteniendo todos los roles');
-    CafeApi.configureDio();
-    return CafeApi.httpGet(roles(null)).then((res) async {
-      debugPrint(' ressssss ${json.encode(res.data['roles'])}');
-      rolBloc.add(UpdateListRol(rolesModelFromJson(json.encode(res.data['roles']))));
-    });
-  }
-
-  callAllTypeUsers() async {
-    final typeUserBloc = BlocProvider.of<TypeUserBloc>(context, listen: false);
-    debugPrint('obteniendo todos los tipos de usuarios');
-    CafeApi.configureDio();
-    return CafeApi.httpGet(typeUsers(null)).then((res) async {
-      debugPrint(' ressssss ${json.encode(res.data['tiposUsuarios'])}');
-      typeUserBloc.add(UpdateListTypeUser(typeUserModelFromJson(json.encode(res.data['tiposUsuarios']))));
-    });
   }
 
   @override
@@ -253,7 +226,6 @@ class _AddUserFormState extends State<AddUserForm> {
       'code': codeCtrl.text.trim(),
       'typeUser': idTypeUserSelect,
       'rol': idRolSelect,
-      'careerIds': carrerIds,
     });
     setState(() => stateLoading = !stateLoading);
     return CafeApi.post(users(null), formData).then((res) async {
@@ -280,7 +252,6 @@ class _AddUserFormState extends State<AddUserForm> {
       'code': codeCtrl.text.trim(),
       'typeUser': idTypeUserSelect,
       'rol': idRolSelect,
-      'careerIds': carrerIds,
     });
     return CafeApi.put(users(widget.item!.id), formData).then((res) async {
       final user = userModelFromJson(json.encode(res.data['usuario']));

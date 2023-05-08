@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Logo extends StatelessWidget {
   const Logo({super.key});
@@ -8,15 +7,14 @@ class Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 30),
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.bubble_chart_outlined, color: Color(0xff7A6BF5)),
-          const SizedBox(width: 10),
-          Text(
-            'Admin',
-            style: GoogleFonts.montserratAlternates(fontSize: 20, fontWeight: FontWeight.w200, color: Colors.white),
-          )
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Image.asset(
+                'assets/images/logo.png',
+              ))
         ],
       ),
     );

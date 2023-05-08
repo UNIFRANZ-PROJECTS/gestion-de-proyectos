@@ -52,19 +52,11 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
                 initPage: false,
               ),
               (size.width > 1000)
-                  ? Column(
-                      children: [
-                        Row(
-                          children: [...titleName()],
-                        ),
-                        Row(
-                          children: [...details()],
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [...titleName(), ...details()],
-                    ),
+                  ? Row(children: titleName())
+                  : Column(mainAxisSize: MainAxisSize.min, children: titleName()),
+              (size.width > 1000)
+                  ? Row(children: details())
+                  : Column(mainAxisSize: MainAxisSize.min, children: details()),
               !stateLoading
                   ? widget.item == null
                       ? ButtonComponent(text: 'Crear Categoria', onPressed: () => createCategory())
@@ -140,13 +132,13 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
               if (value.isNotEmpty) {
                 return null;
               } else {
-                return 'Nombre';
+                return 'Descripción';
               }
             },
             keyboardType: TextInputType.text,
             textCapitalization: TextCapitalization.characters,
-            labelText: "Nombre:",
-            hintText: "Nombre"),
+            labelText: "Descripción:",
+            hintText: "Descripción"),
       ),
       Flexible(
         child: InputComponent(
@@ -161,13 +153,13 @@ class _AddTeacherFormState extends State<AddTeacherForm> {
               if (value.isNotEmpty) {
                 return null;
               } else {
-                return 'Apellido';
+                return 'Especialidad';
               }
             },
             keyboardType: TextInputType.text,
             textCapitalization: TextCapitalization.characters,
-            labelText: "Apellido:",
-            hintText: "Apellido"),
+            labelText: "Especialidad:",
+            hintText: "Especialidad"),
       ),
     ];
   }

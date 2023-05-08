@@ -12,3 +12,15 @@ class UpdateListProject extends ProjectEvent {
 
   const UpdateListProject(this.listProject);
 }
+
+class AddItemProject extends ProjectEvent {
+  final ProjectModel project;
+
+  const AddItemProject(this.project);
+}
+
+class UpdateItemProject extends ProjectEvent {
+  final ProjectModel project;
+
+  const UpdateItemProject(this.project);
+}

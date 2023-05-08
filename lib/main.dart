@@ -28,6 +28,8 @@ void main() async {
   runApp(
     MultiBlocProvider(
         providers: [
+          BlocProvider(create: (_) => TypeProjectBloc()),
+          BlocProvider(create: (_) => CategoryBloc()),
           BlocProvider(create: (_) => ProjectBloc()),
           BlocProvider(create: (_) => SubjectBloc()),
           BlocProvider(create: (_) => TeacherBloc()),

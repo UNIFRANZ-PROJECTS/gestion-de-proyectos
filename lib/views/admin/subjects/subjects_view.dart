@@ -8,6 +8,7 @@ import 'package:gestion_projects/components/compoents.dart';
 import 'package:gestion_projects/models/models.dart';
 import 'package:gestion_projects/services/cafe_api.dart';
 import 'package:gestion_projects/services/services.dart';
+import 'package:gestion_projects/views/admin/subjects/add_info_subjects.dart';
 
 import 'add_subject.dart';
 import 'subjects_datasource.dart';
@@ -28,6 +29,7 @@ class _SubjectViewState extends State<SubjectView> {
 
   callAllSubjects() async {
     debugPrint('obteniendo todos las materias');
+    CafeApi.configureDio();
     final subjectBloc = BlocProvider.of<SubjectBloc>(context, listen: false);
     return CafeApi.httpGet(subjects(null)).then((res) async {
       final subjects = listSubjectModelFromJson(json.encode(res.data['subject']));
@@ -52,6 +54,7 @@ class _SubjectViewState extends State<SubjectView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Lista de Materias'),
+              ButtonComponent(text: 'Subir excel', onPressed: () => uploadxlxs(context)),
               ButtonComponent(text: 'Agregar nueva materia', onPressed: () => showAddTeacher(context)),
             ],
           ),
@@ -62,6 +65,11 @@ class _SubjectViewState extends State<SubjectView> {
                   sortAscending: subjectBloc.state.ascending,
                   sortColumnIndex: subjectBloc.state.sortColumnIndex,
                   columns: [
+                    DataColumn(
+                        label: const Text('Codigo'),
+                        onSort: (colIndex, _) {
+                          // teacherBloc.add(UpdateSortColumnIndexCategory(colIndex));
+                        }),
                     DataColumn(
                         label: const Text('Nombre'),
                         onSort: (colIndex, _) {
@@ -86,11 +94,18 @@ class _SubjectViewState extends State<SubjectView> {
         ]));
   }
 
+  void uploadxlxs(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const DialogWidget(
+              component: AddSubjectsData(),
+            ));
+  }
+
   void showAddTeacher(BuildContext context) {
     showDialog(
         context: context,
-        builder: (BuildContext context) =>
-            const DialogWidget(component: AddTeacherForm(titleheader: 'Nueva Categoria')));
+        builder: (BuildContext context) => const DialogWidget(component: AddTeacherForm(titleheader: 'Nueva Materia')));
   }
 
   showEditCategory(BuildContext context, SubjectModel subject) {

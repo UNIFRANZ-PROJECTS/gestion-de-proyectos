@@ -5,8 +5,10 @@ class ProjectDataSource extends DataTableSource {
   final Function(ProjectModel) editTypeUser;
   final Function(ProjectModel, bool) deleteTypeUser;
   final List<ProjectModel> projects;
+  final Function(ProjectModel) showSubjects;
+  final Function(ProjectModel) showStudents;
 
-  ProjectDataSource(this.projects, this.editTypeUser, this.deleteTypeUser);
+  ProjectDataSource(this.projects, this.editTypeUser, this.deleteTypeUser, this.showSubjects, this.showStudents);
 
   @override
   DataRow getRow(int index) {
@@ -14,10 +16,14 @@ class ProjectDataSource extends DataTableSource {
 
     return DataRow.byIndex(index: index, cells: [
       DataCell(Text(project.name)),
+      DataCell(Text(project.category.name)),
+      DataCell(Text(project.typeProyect.name)),
       DataCell(Text(project.description)),
       DataCell(Text(project.state ? 'Activo' : 'Inactivo')),
       DataCell(Row(
         children: [
+          IconButton(icon: const Icon(Icons.remove_red_eye_rounded), onPressed: () => showSubjects(project)),
+          IconButton(icon: const Icon(Icons.remove_red_eye_rounded), onPressed: () => showStudents(project)),
           IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => editTypeUser(project)),
           Transform.scale(
               scale: .5,
