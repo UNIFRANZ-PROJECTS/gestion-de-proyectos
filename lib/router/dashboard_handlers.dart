@@ -7,7 +7,10 @@ import 'package:gestion_projects/provider/sidemenu_provider.dart';
 import 'package:gestion_projects/router/router.dart';
 import 'package:gestion_projects/views/admin/permisions/permisions_view.dart';
 import 'package:gestion_projects/views/admin/projects/projects_view.dart';
+import 'package:gestion_projects/views/admin/requirements/requirements_view.dart';
 import 'package:gestion_projects/views/admin/roles/roles_view.dart';
+import 'package:gestion_projects/views/admin/seasons/seasons_view.dart';
+import 'package:gestion_projects/views/admin/stages/stages_view.dart';
 import 'package:gestion_projects/views/admin/subjects/subjects_view.dart';
 import 'package:gestion_projects/views/admin/teachers/teachers_view.dart';
 import 'package:gestion_projects/views/admin/type_projects/type_projects_view.dart';
@@ -120,13 +123,46 @@ class DashboardHandlers {
       return const HomeScreen();
     }
   });
-  // topos de proyectos
+  // tipos de proyectos
   static Handler typeProjects = Handler(handlerFunc: (context, params) {
     final authProvider = Provider.of<AuthProvider>(context!);
     Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(Flurorouter.typeProjectsRoute);
 
     if (authProvider.authStatus == AuthStatus.authenticated) {
       return const TypeProjectsView();
+    } else {
+      return const HomeScreen();
+    }
+  });
+  //temporadas
+  static Handler seasons = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(Flurorouter.seasonsRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const SeasonsView();
+    } else {
+      return const HomeScreen();
+    }
+  });
+  //etapas
+  static Handler stages = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(Flurorouter.stagesRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const StagesView();
+    } else {
+      return const HomeScreen();
+    }
+  });
+  //requisitos
+  static Handler requirements = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPageUrl(Flurorouter.requirementsRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const RequirementsView();
     } else {
       return const HomeScreen();
     }

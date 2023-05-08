@@ -1,33 +1,33 @@
-part of 'permision_bloc.dart';
+part of 'season_bloc.dart';
 
-class PermisionState extends Equatable {
-  final List<PermisionsModel> listPermision;
+class SeasonState extends Equatable {
+  final List<SeasonModel> listSeason;
 
   final bool isLoading;
   final bool ascending;
   final int? sortColumnIndex;
 
-  const PermisionState({
-    this.listPermision = const [],
+  const SeasonState({
+    this.listSeason = const [],
     this.isLoading = true,
     this.ascending = true,
     this.sortColumnIndex,
   });
-  PermisionState copyWith({
-    List<PermisionsModel>? listPermision,
+  SeasonState copyWith({
+    List<SeasonModel>? listSeason,
     bool? isLoading,
     bool? ascending,
     int? sortColumnIndex,
   }) =>
-      PermisionState(
-        listPermision: listPermision ?? this.listPermision,
+      SeasonState(
+        listSeason: listSeason ?? this.listSeason,
         isLoading: isLoading ?? this.isLoading,
         ascending: ascending ?? this.ascending,
         sortColumnIndex: sortColumnIndex ?? this.sortColumnIndex,
       );
   @override
   List<Object> get props => [
-        listPermision,
+        listSeason,
         isLoading,
         ascending,
       ];

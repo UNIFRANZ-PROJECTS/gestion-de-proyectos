@@ -23,3 +23,10 @@ String typeUsers(String? id) => '/typeuser/${id ?? ''}';
 String categories(String? id) => '/category/${id ?? ''}';
 //tipos de proyectos
 String typeProjects(String? id) => '/typeproject/${id ?? ''}';
+//requermientos
+String requirements(String? id) => '/requirement/${id ?? ''}';
+//etapas
+String stages(String? id) => '/stage/${id ?? ''}';
+//temporadas
+String seasons(String? id) => '/season/${id ?? ''}';
+//

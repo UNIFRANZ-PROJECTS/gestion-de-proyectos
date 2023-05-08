@@ -28,6 +28,9 @@ void main() async {
   runApp(
     MultiBlocProvider(
         providers: [
+          BlocProvider(create: (_) => RequirementBloc()),
+          BlocProvider(create: (_) => SeasonBloc()),
+          BlocProvider(create: (_) => StageBloc()),
           BlocProvider(create: (_) => TypeProjectBloc()),
           BlocProvider(create: (_) => CategoryBloc()),
           BlocProvider(create: (_) => ProjectBloc()),

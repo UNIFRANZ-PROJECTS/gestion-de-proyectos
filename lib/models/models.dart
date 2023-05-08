@@ -2,11 +2,17 @@ import 'dart:convert';
 
 import 'package:gestion_projects/models/element.model.dart';
 import 'package:gestion_projects/models/project.mode.dart';
+import 'package:gestion_projects/models/requirement.model.dart';
+import 'package:gestion_projects/models/season.model.dart';
+import 'package:gestion_projects/models/stage.model.dart';
 import 'package:gestion_projects/models/teacher.model.dart';
 import 'package:gestion_projects/models/subject.model.dart';
 import 'package:gestion_projects/models/user.model.dart';
 
 export 'package:gestion_projects/models/project.mode.dart';
+export 'package:gestion_projects/models/requirement.model.dart';
+export 'package:gestion_projects/models/season.model.dart';
+export 'package:gestion_projects/models/stage.model.dart';
 export 'package:gestion_projects/models/teacher.model.dart';
 export 'package:gestion_projects/models/subject.model.dart';
 export 'package:gestion_projects/models/user.model.dart';
@@ -37,3 +43,19 @@ List<ElementModel> listElementModelFromJson(String str) =>
     List<ElementModel>.from(json.decode(str).map((x) => ElementModel.fromJson(x)));
 
 String elementModelToList(List<ElementModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+//lista de temporadas
+List<SeasonModel> listSeasonModelFromJson(String str) =>
+    List<SeasonModel>.from(json.decode(str).map((x) => SeasonModel.fromJson(x)));
+
+String listSeasonModelToJson(List<SeasonModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+//lista de etapas
+List<StageModel> listStageModelFromJson(String str) =>
+    List<StageModel>.from(json.decode(str).map((x) => StageModel.fromJson(x)));
+
+String listStageModelToJson(List<StageModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+//lista de requisitos
+List<RequirementModel> listRequirementModelFromJson(String str) =>
+    List<RequirementModel>.from(json.decode(str).map((x) => RequirementModel.fromJson(x)));
+
+String listRequirementModelToJson(List<RequirementModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

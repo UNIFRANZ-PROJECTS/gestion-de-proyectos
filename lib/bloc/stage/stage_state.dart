@@ -1,33 +1,33 @@
-part of 'permision_bloc.dart';
+part of 'stage_bloc.dart';
 
-class PermisionState extends Equatable {
-  final List<PermisionsModel> listPermision;
+class StageState extends Equatable {
+  final List<StageModel> listStage;
 
   final bool isLoading;
   final bool ascending;
   final int? sortColumnIndex;
 
-  const PermisionState({
-    this.listPermision = const [],
+  const StageState({
+    this.listStage = const [],
     this.isLoading = true,
     this.ascending = true,
     this.sortColumnIndex,
   });
-  PermisionState copyWith({
-    List<PermisionsModel>? listPermision,
+  StageState copyWith({
+    List<StageModel>? listStage,
     bool? isLoading,
     bool? ascending,
     int? sortColumnIndex,
   }) =>
-      PermisionState(
-        listPermision: listPermision ?? this.listPermision,
+      StageState(
+        listStage: listStage ?? this.listStage,
         isLoading: isLoading ?? this.isLoading,
         ascending: ascending ?? this.ascending,
         sortColumnIndex: sortColumnIndex ?? this.sortColumnIndex,
       );
   @override
   List<Object> get props => [
-        listPermision,
+        listStage,
         isLoading,
         ascending,
       ];

@@ -7,3 +7,6 @@ export 'package:gestion_projects/bloc/subject/subject_bloc.dart';
 export 'package:gestion_projects/bloc/project/project_bloc.dart';
 export 'package:gestion_projects/bloc/category/category_bloc.dart';
 export 'package:gestion_projects/bloc/type_project/type_project_bloc.dart';
+export 'package:gestion_projects/bloc/requirement/requirement_bloc.dart';
+export 'package:gestion_projects/bloc/stage/stage_bloc.dart';
+export 'package:gestion_projects/bloc/season/season_bloc.dart';

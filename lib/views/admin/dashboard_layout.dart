@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gestion_projects/views/admin/menu.dart';
 import 'package:gestion_projects/views/pages/admin/navbar.dart';
 import 'package:gestion_projects/views/pages/admin/sidebar.dart';
+import 'package:provider/provider.dart';
+import 'package:gestion_projects/provider/app_state.dart';
 import 'package:gestion_projects/provider/sidemenu_provider.dart';
 
 class DashboardLayout extends StatefulWidget {
@@ -27,9 +28,8 @@ class _DashboardLayoutState extends State<DashboardLayout> with SingleTickerProv
 
     return Scaffold(
         key: scaffoldKey,
-        backgroundColor: const Color(0xffEDF1F2),
+        backgroundColor: const Color(0xff151E28),
         endDrawerEnableOpenDragGesture: false,
-        endDrawer: const MenuDrawer(),
         body: Stack(
           children: [
             Row(
@@ -37,22 +37,28 @@ class _DashboardLayoutState extends State<DashboardLayout> with SingleTickerProv
                 if (size.width >= 700) const Sidebar(),
 
                 Expanded(
-                  child: Column(
-                    children: [
-                      // Navbar
-                      Navbar(
-                        infoUser: () {
-                          scaffoldKey.currentState!.openEndDrawer();
-                        },
-                      ),
-
-                      // View
-                      Expanded(
-                        child: widget.child,
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xffEBEDEE),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Navbar(
+                              // title: nameRoute,
+                              infoUser: () {
+                                scaffoldKey.currentState!.openEndDrawer();
+                              },
+                            ),
+                            Expanded(
+                              child: widget.child,
+                            ),
+                          ],
+                        )),
                   ),
-                )
+                ),
                 // Contenedor de nuestro view
               ],
             ),

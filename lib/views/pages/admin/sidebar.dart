@@ -21,9 +21,9 @@ class Sidebar extends StatelessWidget {
     final sideMenuProvider = Provider.of<SideMenuProvider>(context);
 
     return Container(
+      color: const Color(0xff151E28),
       width: 200,
       height: double.infinity,
-      decoration: buildBoxDecoration(),
       child: Column(
         children: [
           const Logo(),
@@ -42,20 +42,20 @@ class Sidebar extends StatelessWidget {
                 MenuItem(
                   text: 'Gestiones',
                   icon: Icons.event_available_sharp,
-                  onPressed: () => navigateTo(Flurorouter.projectRoute),
-                  isActive: sideMenuProvider.currentPage == Flurorouter.projectRoute,
+                  onPressed: () => navigateTo(Flurorouter.seasonsRoute),
+                  isActive: sideMenuProvider.currentPage == Flurorouter.seasonsRoute,
                 ),
                 MenuItem(
                   text: 'Etapas',
                   icon: Icons.event_available_sharp,
-                  onPressed: () => navigateTo(Flurorouter.projectRoute),
-                  isActive: sideMenuProvider.currentPage == Flurorouter.projectRoute,
+                  onPressed: () => navigateTo(Flurorouter.stagesRoute),
+                  isActive: sideMenuProvider.currentPage == Flurorouter.stagesRoute,
                 ),
                 MenuItem(
                   text: 'Requisitos',
                   icon: Icons.event_available_sharp,
-                  onPressed: () => navigateTo(Flurorouter.projectRoute),
-                  isActive: sideMenuProvider.currentPage == Flurorouter.projectRoute,
+                  onPressed: () => navigateTo(Flurorouter.requirementsRoute),
+                  isActive: sideMenuProvider.currentPage == Flurorouter.requirementsRoute,
                 ),
                 const TextSeparator(text: 'Administración de proyectos'),
                 MenuItem(
@@ -129,11 +129,4 @@ class Sidebar extends StatelessWidget {
       ),
     );
   }
-
-  BoxDecoration buildBoxDecoration() => const BoxDecoration(
-      gradient: LinearGradient(colors: [
-        Color(0xff092044),
-        Color(0xff092042),
-      ]),
-      boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)]);
 }

@@ -1,33 +1,33 @@
-part of 'permision_bloc.dart';
+part of 'requirement_bloc.dart';
 
-class PermisionState extends Equatable {
-  final List<PermisionsModel> listPermision;
+class RequirementState extends Equatable {
+  final List<RequirementModel> listRequirement;
 
   final bool isLoading;
   final bool ascending;
   final int? sortColumnIndex;
 
-  const PermisionState({
-    this.listPermision = const [],
+  const RequirementState({
+    this.listRequirement = const [],
     this.isLoading = true,
     this.ascending = true,
     this.sortColumnIndex,
   });
-  PermisionState copyWith({
-    List<PermisionsModel>? listPermision,
+  RequirementState copyWith({
+    List<RequirementModel>? listRequirement,
     bool? isLoading,
     bool? ascending,
     int? sortColumnIndex,
   }) =>
-      PermisionState(
-        listPermision: listPermision ?? this.listPermision,
+      RequirementState(
+        listRequirement: listRequirement ?? this.listRequirement,
         isLoading: isLoading ?? this.isLoading,
         ascending: ascending ?? this.ascending,
         sortColumnIndex: sortColumnIndex ?? this.sortColumnIndex,
       );
   @override
   List<Object> get props => [
-        listPermision,
+        listRequirement,
         isLoading,
         ascending,
       ];
