@@ -65,6 +65,7 @@ class _RequirementsViewState extends State<RequirementsView> {
                         onSort: (index, _) {
                           // typeUserBloc.add(UpdateSortColumnIndexTypeUser(index));
                         }),
+                    const DataColumn(label: Text('Descripcion')),
                     const DataColumn(label: Text('Estado')),
                     const DataColumn(label: Text('Acciones')),
                   ],

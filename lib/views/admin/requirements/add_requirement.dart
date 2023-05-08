@@ -21,6 +21,7 @@ class AddRequirement extends StatefulWidget {
 class _AddRequirementState extends State<AddRequirement> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController nameCtrl = TextEditingController();
+  TextEditingController descriptionCtrl = TextEditingController();
   bool stateLoading = false;
 
   @override
@@ -65,10 +66,29 @@ class _AddRequirementState extends State<AddRequirement> {
                   textCapitalization: TextCapitalization.characters,
                   labelText: "Nombre:",
                   hintText: "Nombre"),
+              InputComponent(
+                  textInputAction: TextInputAction.done,
+                  controllerText: descriptionCtrl,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z ]")),
+                    LengthLimitingTextInputFormatter(100)
+                  ],
+                  onEditingComplete: () {},
+                  validator: (value) {
+                    if (value.isNotEmpty) {
+                      return null;
+                    } else {
+                      return 'Nombre';
+                    }
+                  },
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.characters,
+                  labelText: "Nombre:",
+                  hintText: "Nombre"),
               !stateLoading
                   ? widget.item == null
-                      ? ButtonComponent(text: 'Crear Requisito', onPressed: () => createCategory())
-                      : ButtonComponent(text: 'Actualizar Requisito', onPressed: () => updateCategory())
+                      ? ButtonComponent(text: 'Crear Requisito', onPressed: () => createRequirement())
+                      : ButtonComponent(text: 'Actualizar Requisito', onPressed: () => updateRequirement())
                   : Center(
                       child: Image.asset(
                       'assets/gifs/load.gif',
@@ -82,16 +102,19 @@ class _AddRequirementState extends State<AddRequirement> {
     );
   }
 
-  createCategory() async {
-    final typeProjectBloc = BlocProvider.of<TypeProjectBloc>(context, listen: false);
+  createRequirement() async {
+    final requirementBloc = BlocProvider.of<RequirementBloc>(context, listen: false);
     CafeApi.configureDio();
     FocusScope.of(context).unfocus();
     if (!formKey.currentState!.validate()) return;
-    FormData formData = FormData.fromMap({"name": "asdasdsadsd", "description": "adsdasdsads"});
+    FormData formData = FormData.fromMap({
+      "name": nameCtrl.text.trim(),
+      "description": descriptionCtrl.text.trim(),
+    });
     setState(() => stateLoading = !stateLoading);
-    return CafeApi.post(typeProjects(null), formData).then((res) async {
+    return CafeApi.post(requirements(null), formData).then((res) async {
       setState(() => stateLoading = !stateLoading);
-      typeProjectBloc.add(AddItemTypeProject(elementModelFromJson(json.encode(res.data['tipoProyecto']))));
+      requirementBloc.add(AddItemRequirement(requirementModelFromJson(json.encode(res.data['requisito']))));
       Navigator.pop(context);
     }).catchError((e) {
       debugPrint('e $e');
@@ -101,8 +124,8 @@ class _AddRequirementState extends State<AddRequirement> {
     });
   }
 
-  updateCategory() async {
-    final typeProjectBloc = BlocProvider.of<TypeProjectBloc>(context, listen: false);
+  updateRequirement() async {
+    final requirementBloc = BlocProvider.of<RequirementBloc>(context, listen: false);
     CafeApi.configureDio();
     FocusScope.of(context).unfocus();
     if (!formKey.currentState!.validate()) return;
@@ -112,8 +135,8 @@ class _AddRequirementState extends State<AddRequirement> {
     setState(() => stateLoading = !stateLoading);
     return CafeApi.put(typeProjects(widget.item!.id), formData).then((res) async {
       setState(() => stateLoading = !stateLoading);
-      final element = elementModelFromJson(json.encode(res.data['tipoProyecto']));
-      typeProjectBloc.add(UpdateItemTypeProject(element));
+      final element = requirementModelFromJson(json.encode(res.data['requisito']));
+      requirementBloc.add(UpdateItemRequirement(element));
       Navigator.pop(context);
     }).catchError((e) {
       debugPrint('e $e');

@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:gestion_projects/models/models.dart';
 
 class RequirementsDataSource extends DataTableSource {
-  final Function(RequirementModel) editTypeUser;
-  final Function(RequirementModel, bool) deleteTypeUser;
-  final List<RequirementModel> typeUsers;
+  final Function(RequirementModel) editRequirement;
+  final Function(RequirementModel, bool) deleteRequirement;
+  final List<RequirementModel> requirements;
 
-  RequirementsDataSource(this.typeUsers, this.editTypeUser, this.deleteTypeUser);
+  RequirementsDataSource(this.requirements, this.editRequirement, this.deleteRequirement);
 
   @override
   DataRow getRow(int index) {
-    final RequirementModel typeUser = typeUsers[index];
+    final RequirementModel requirement = requirements[index];
     return DataRow.byIndex(index: index, cells: [
-      DataCell(Text(typeUser.name)),
-      DataCell(Text(typeUser.state ? 'Activo' : 'Inactivo')),
+      DataCell(Text(requirement.name)),
+      DataCell(Text(requirement.description)),
+      DataCell(Text(requirement.state ? 'Activo' : 'Inactivo')),
       DataCell(Row(
         children: [
-          IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => editTypeUser(typeUser)),
+          IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => editRequirement(requirement)),
           Transform.scale(
               scale: .5,
               child: Switch(
@@ -24,8 +25,8 @@ class RequirementsDataSource extends DataTableSource {
                   inactiveTrackColor: Colors.red,
                   inactiveThumbColor: Colors.white,
                   activeColor: Colors.white,
-                  value: typeUser.state,
-                  onChanged: (state) => deleteTypeUser(typeUser, state)))
+                  value: requirement.state,
+                  onChanged: (state) => deleteRequirement(requirement, state)))
         ],
       )),
     ]);
@@ -35,7 +36,7 @@ class RequirementsDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => typeUsers.length;
+  int get rowCount => requirements.length;
 
   @override
   int get selectedRowCount => 0;
