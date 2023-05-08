@@ -67,7 +67,7 @@ class _AddStageState extends State<AddStage> {
                   hintText: "Nombre"),
               !stateLoading
                   ? widget.item == null
-                      ? ButtonComponent(text: 'Crear Categoria', onPressed: () => createCategory())
+                      ? ButtonComponent(text: 'Crear Categoria', onPressed: () => createStage())
                       : ButtonComponent(text: 'Actualizar Categoria', onPressed: () => updateCategory())
                   : Center(
                       child: Image.asset(
@@ -82,18 +82,22 @@ class _AddStageState extends State<AddStage> {
     );
   }
 
-  createCategory() async {
-    final typeProjectBloc = BlocProvider.of<TypeProjectBloc>(context, listen: false);
+  createStage() async {
+    final stageBloc = BlocProvider.of<StageBloc>(context, listen: false);
     CafeApi.configureDio();
     FocusScope.of(context).unfocus();
     if (!formKey.currentState!.validate()) return;
     FormData formData = FormData.fromMap({
-      'name': nameCtrl.text.trim(),
+      'name': "asdasdsadsd",
+      'start': "2023-05-08 09:00:00.000",
+      'end': "2023-05-08 09:00:00.000",
+      'weighing': 123,
+      'requirementIds': ["64592101914edac991a47af8", "645921133d7dc7ca0bdb1667"]
     });
     setState(() => stateLoading = !stateLoading);
     return CafeApi.post(typeProjects(null), formData).then((res) async {
       setState(() => stateLoading = !stateLoading);
-      typeProjectBloc.add(AddItemTypeProject(elementModelFromJson(json.encode(res.data['tipoProyecto']))));
+      stageBloc.add(AddItemStage(stageModelFromJson(json.encode(res.data['etapa']))));
       Navigator.pop(context);
     }).catchError((e) {
       debugPrint('e $e');
@@ -104,18 +108,22 @@ class _AddStageState extends State<AddStage> {
   }
 
   updateCategory() async {
-    final typeProjectBloc = BlocProvider.of<TypeProjectBloc>(context, listen: false);
+    final stageBloc = BlocProvider.of<StageBloc>(context, listen: false);
     CafeApi.configureDio();
     FocusScope.of(context).unfocus();
     if (!formKey.currentState!.validate()) return;
     FormData formData = FormData.fromMap({
-      'name': nameCtrl.text.trim(),
+      'name': "asdasdsadsd",
+      'start': "2023-05-08 09:00:00.000",
+      'end': "2023-05-08 09:00:00.000",
+      'weighing': 123,
+      'requirementIds': ["64592101914edac991a47af8", "645921133d7dc7ca0bdb1667"]
     });
     setState(() => stateLoading = !stateLoading);
     return CafeApi.put(typeProjects(widget.item!.id), formData).then((res) async {
       setState(() => stateLoading = !stateLoading);
-      final element = elementModelFromJson(json.encode(res.data['tipoProyecto']));
-      typeProjectBloc.add(UpdateItemTypeProject(element));
+      final element = stageModelFromJson(json.encode(res.data['etapa']));
+      stageBloc.add(UpdateItemStage(element));
       Navigator.pop(context);
     }).catchError((e) {
       debugPrint('e $e');
