@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gestion_projects/components/compoents.dart';
-
-import 'package:gestion_projects/services/navigation_service.dart';
-import 'package:gestion_projects/views/home/login_client.dart';
+import 'package:gestion_projects/views/home/custom_app_menu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,72 +18,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final selectedCategoryId = Provider.of<AppState>(context).selectedCategoryId;
-    // final size = MediaQuery.of(context).size;
-    return WillPopScope(
-      onWillPop: _onBackPressed,
-      child: Stack(
-        children: <Widget>[
-          Image.asset(
-            "assets/images/study.jpg",
-            color: Colors.white.withOpacity(0.8),
-            colorBlendMode: BlendMode.modulate,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover,
-          ),
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: const Color(0xffF6F6F6),
+      body: Column(
+        children: [
+          CustomAppMenu(),
           Expanded(
-            child: Column(children: [
-              HedersComponent(
-                onPressLogin: () => loginshow(context),
-                onPressLogout: () => {},
-              ),
-            ]),
-          )
+              child: (size.width > 1000)
+                  ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      text(),
+                      logo(),
+                    ])
+                  : Column(
+                      children: [
+                        logo(),
+                        text(),
+                      ],
+                    ))
         ],
       ),
     );
-    // return WillPopScope(
-    //     onWillPop: _onBackPressed,
-    //     child: Column(
-    //       children: [
-    //         HedersComponent(
-    //           onPressLogin: () => loginshow(context),
-    //           onPressLogout: () => {},
-    //         ),
-    //         // Text('${searchState}'),
-
-    //         // Padding(
-    //         //     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-    //         //     child: Text('Hoy es ${DateFormat('dd, MMMM yyyy ', "es_ES").format(DateTime.now())}')),
-    //         // Expanded(
-    //         //   child: BlocBuilder<EventBloc, EventState>(
-    //         //     builder: (context, state) {
-    //         //       final events = _getEvents(state, selectedCategoryId);
-    //         //       return (size.width > 1000)
-    //         //           ? GridView.count(
-    //         //               childAspectRatio: 1,
-    //         //               crossAxisCount: 4,
-    //         //               children: events.map(itemEvent).toList(),
-    //         //             )
-    //         //           : SingleChildScrollView(
-    //         //               child: Column(
-    //         //                 children: events.map(itemEvent).toList(),
-    //         //               ),
-    //         //             );
-    //         //     },
-    //         //   ),
-    //         // ),
-    //       ],
-    //     ));
   }
 
-  Future<bool> _onBackPressed() async {
-    NavigationService.replaceTo('/');
-    return false;
+  Widget text() {
+    final size = MediaQuery.of(context).size;
+    return Expanded(
+        flex: (size.width > 1000) ? 1 : 3,
+        child: Center(
+            child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: (size.width > 1000) ? 80 : 20),
+                child: const Column(mainAxisSize: MainAxisSize.min, children: [
+                  Text(
+                    'Bienvenido(a) Centro de estudianes',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                ]))));
   }
 
-  void loginshow(BuildContext context) {
-    showDialog(context: context, builder: (BuildContext context) => const DialogLogin());
+  Widget logo() {
+    final size = MediaQuery.of(context).size;
+    return Expanded(
+        flex: 1,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: (size.width > 1000) ? 0 : 20),
+          child: const Center(
+            child: Image(
+              image: AssetImage(
+                'assets/images/fondo.png',
+              ),
+            ),
+          ),
+        ));
   }
 }

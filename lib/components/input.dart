@@ -48,14 +48,16 @@ class InputComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: hintText != null ? 8 : 0),
-      child: hintText != null
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [if (hintText != null) Text(labelText), input()],
-            )
-          : input(),
+    return Flexible(
+      child: Padding(
+        padding: EdgeInsets.only(top: hintText != null ? 8 : 0),
+        child: hintText != null
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [if (hintText != null) Text(labelText), input()],
+              )
+            : input(),
+      ),
     );
   }
 

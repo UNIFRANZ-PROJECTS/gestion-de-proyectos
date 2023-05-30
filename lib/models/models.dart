@@ -1,22 +1,28 @@
 import 'dart:convert';
 
 import 'package:gestion_projects/models/element.model.dart';
+import 'package:gestion_projects/models/parallel.model.dart';
 import 'package:gestion_projects/models/project.mode.dart';
 import 'package:gestion_projects/models/requirement.model.dart';
 import 'package:gestion_projects/models/season.model.dart';
 import 'package:gestion_projects/models/stage.model.dart';
+import 'package:gestion_projects/models/suscribe.model.dart';
 import 'package:gestion_projects/models/teacher.model.dart';
 import 'package:gestion_projects/models/subject.model.dart';
 import 'package:gestion_projects/models/user.model.dart';
+// import 'package:gestion_projects/models/auth.model.dart';
 
 export 'package:gestion_projects/models/project.mode.dart';
 export 'package:gestion_projects/models/requirement.model.dart';
 export 'package:gestion_projects/models/season.model.dart';
 export 'package:gestion_projects/models/stage.model.dart';
+export 'package:gestion_projects/models/suscribe.model.dart';
 export 'package:gestion_projects/models/teacher.model.dart';
 export 'package:gestion_projects/models/subject.model.dart';
 export 'package:gestion_projects/models/user.model.dart';
 export 'package:gestion_projects/models/element.model.dart';
+export 'package:gestion_projects/models/parallel.model.dart';
+export 'package:gestion_projects/models/auth.model.dart';
 
 //lista de profesores
 List<TeacherModel> listTeacherModelFromJson(String str) =>
@@ -56,6 +62,17 @@ String listStageModelToJson(List<StageModel> data) => json.encode(List<dynamic>.
 //lista de requisitos
 List<RequirementModel> listRequirementModelFromJson(String str) =>
     List<RequirementModel>.from(json.decode(str).map((x) => RequirementModel.fromJson(x)));
-
 String listRequirementModelToJson(List<RequirementModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+//lista de paralelos
+List<ParallelModel> listParallelModelFromJson(String str) =>
+    List<ParallelModel>.from(json.decode(str).map((x) => ParallelModel.fromJson(x)));
+
+String listParallelModelToJson(List<ParallelModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+//lista de inscripciones
+List<SuscribeModel> listSuscribeModelFromJson(String str) =>
+    List<SuscribeModel>.from(json.decode(str).map((x) => SuscribeModel.fromJson(x)));
+
+String listSuscribeModelToJson(List<SuscribeModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

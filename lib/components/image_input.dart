@@ -1,15 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ImageInputComponent extends StatefulWidget {
+  final bool isImage;
   final bool edit;
   final String? imageFile;
-  final Function(Uint8List) onPressed;
+  final Function(String) onPressed;
   final String? defect;
   const ImageInputComponent({
     super.key,
+    this.isImage = true,
     this.edit = false,
     this.imageFile,
     required this.onPressed,
@@ -33,12 +37,18 @@ class _ImageInputComponentState extends State<ImageInputComponent> {
                 borderRadius: BorderRadius.circular(100.0),
                 child: preview == null
                     ? widget.defect != null
-                        ? FadeInImage.assetNetwork(
-                            placeholder: 'assets/gifs/loader.gif',
-                            width: 200,
-                            height: 200,
-                            image: widget.defect!,
-                          )
+                        ? widget.isImage
+                            ? FadeInImage.assetNetwork(
+                                placeholder: 'assets/gifs/loader.gif',
+                                width: 200,
+                                height: 200,
+                                image: widget.defect!,
+                              )
+                            : SvgPicture.network(
+                                widget.defect!,
+                                width: 200,
+                                height: 200,
+                              )
                         : Image.asset(
                             'assets/images/no-image.jpg',
                             width: 200,
@@ -54,7 +64,9 @@ class _ImageInputComponentState extends State<ImageInputComponent> {
                                 placeholder: 'assets/gifs/loader.gif',
                                 image: widget.imageFile!,
                               )
-                            : Image.memory(preview!))),
+                            : widget.isImage
+                                ? Image.memory(preview!)
+                                : SvgPicture.memory(preview!))),
             const Positioned(
               bottom: 5,
               right: 0,
@@ -71,88 +83,13 @@ class _ImageInputComponentState extends State<ImageInputComponent> {
   }
 
   pickerImage() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'png']);
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: widget.isImage ? ['jpg', 'jpeg', 'png'] : ['svg']);
 
     if (result != null) {
       setState(() => preview = result.files.first.bytes!);
-      widget.onPressed(result.files.first.bytes!);
-    } else {
-      debugPrint('no hay imagen');
-    }
-  }
-}
-
-class SvgInputComponent extends StatefulWidget {
-  final bool edit;
-  final String? imageFile;
-  final Function(Uint8List) onPressed;
-  final String? defect;
-  const SvgInputComponent({
-    super.key,
-    this.edit = false,
-    this.imageFile,
-    required this.onPressed,
-    this.defect,
-  });
-
-  @override
-  State<SvgInputComponent> createState() => _SvgInputComponentState();
-}
-
-class _SvgInputComponentState extends State<SvgInputComponent> {
-  Uint8List? preview;
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: GestureDetector(
-        onTap: () => pickerImage(),
-        child: Stack(
-          children: <Widget>[
-            preview == null
-                ? widget.defect != null
-                    ? SvgPicture.network(
-                        widget.defect!,
-                        width: 200,
-                        height: 200,
-                      )
-                    : Image.asset(
-                        'assets/images/no-image.jpg',
-                        width: 200,
-                        height: 200,
-                        fit: BoxFit.cover,
-                        gaplessPlayback: true,
-                      )
-                : SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: widget.imageFile != null
-                        ? FadeInImage.assetNetwork(
-                            placeholder: 'assets/gifs/loader.gif',
-                            image: widget.imageFile!,
-                          )
-                        : SvgPicture.memory(preview!)),
-            const Positioned(
-              bottom: 5,
-              right: 0,
-              child: Icon(
-                Icons.image,
-                size: 20,
-                color: Colors.grey,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  pickerImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['svg']);
-
-    if (result != null) {
-      setState(() => preview = result.files.first.bytes!);
-      widget.onPressed(result.files.first.bytes!);
+      String base64 = base64Encode(result.files.first.bytes!);
+      widget.onPressed(base64);
     } else {
       debugPrint('no hay imagen');
     }
@@ -161,7 +98,7 @@ class _SvgInputComponentState extends State<SvgInputComponent> {
 
 class InputXls extends StatefulWidget {
   final bool state;
-  final Function(Uint8List) onPressed;
+  final Function(String) onPressed;
   const InputXls({super.key, required this.onPressed, this.state = false});
 
   @override
@@ -169,7 +106,6 @@ class InputXls extends StatefulWidget {
 }
 
 class _InputXlsState extends State<InputXls> {
-  Uint8List? preview;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -186,8 +122,8 @@ class _InputXlsState extends State<InputXls> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['xlsx']);
 
     if (result != null) {
-      setState(() => preview = result.files.first.bytes!);
-      widget.onPressed(result.files.first.bytes!);
+      String base64 = base64Encode(result.files.first.bytes!);
+      widget.onPressed(base64);
     } else {
       debugPrint('no hay file');
     }

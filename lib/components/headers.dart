@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gestion_projects/provider/auth_provider.dart';
 import 'package:gestion_projects/services/local_storage.dart';
 import 'package:provider/provider.dart';
@@ -48,8 +49,8 @@ class _HedersComponentState extends State<HedersComponent> {
             leading: widget.initPage
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Image.asset(
-                      'assets/images/logo.png',
+                    child: SvgPicture.asset(
+                      'assets/images/logo.svg',
                     ))
                 : null,
             actions: widget.initPage

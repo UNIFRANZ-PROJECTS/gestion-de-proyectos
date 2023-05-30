@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:gestion_projects/router/router.dart';
+import 'package:gestion_projects/services/auth_service.dart';
 import 'package:gestion_projects/services/cafe_api.dart';
 import 'package:gestion_projects/services/local_storage.dart';
-import 'package:gestion_projects/services/navigation_service.dart';
+import 'package:get/get.dart' as getdart;
+import 'package:qlevar_router/qlevar_router.dart';
 
 enum AuthStatus { checking, authenticated, notAuthenticated }
 
@@ -21,7 +22,8 @@ class AuthProvider extends ChangeNotifier {
     authStatus = AuthStatus.authenticated;
     LocalStorage.prefs.setString('token', resp.data['token']);
     LocalStorage.prefs.setString('userData', json.encode(resp.data));
-    NavigationService.replaceTo(Flurorouter.dashboardRoute);
+    getdart.Get.find<AuthService>().isAuth = true;
+    QR.navigator.replaceLast('/dashboard');
 
     CafeApi.configureDio();
 
@@ -50,6 +52,9 @@ class AuthProvider extends ChangeNotifier {
   logout() {
     LocalStorage.prefs.remove('token');
     authStatus = AuthStatus.notAuthenticated;
+    getdart.Get.find<AuthService>().isAuth = false;
+    LocalStorage.prefs.remove('token');
+    QR.navigator.replaceLast('/login');
     notifyListeners();
   }
 }

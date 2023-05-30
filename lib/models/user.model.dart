@@ -9,18 +9,7 @@ UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
-  UserModel({
-    required this.rol,
-    required this.typeUser,
-    required this.name,
-    required this.lastName,
-    required this.code,
-    required this.email,
-    required this.responsible,
-    required this.id,
-    required this.state,
-  });
-
+  bool state;
   IdName rol;
   IdName typeUser;
   String name;
@@ -29,9 +18,23 @@ class UserModel {
   String email;
   IdName responsible;
   String id;
-  bool state;
+  bool inscripcion;
+
+  UserModel({
+    required this.state,
+    required this.rol,
+    required this.typeUser,
+    required this.name,
+    required this.lastName,
+    required this.code,
+    required this.email,
+    required this.responsible,
+    required this.id,
+    required this.inscripcion,
+  });
 
   UserModel copyWith({
+    bool? state,
     IdName? rol,
     IdName? typeUser,
     String? name,
@@ -40,20 +43,23 @@ class UserModel {
     String? email,
     IdName? responsible,
     String? id,
-    bool? state,
+    bool? inscripcion,
   }) =>
       UserModel(
-          rol: rol ?? this.rol,
-          typeUser: typeUser ?? this.typeUser,
-          name: name ?? this.name,
-          lastName: lastName ?? this.lastName,
-          code: code ?? this.code,
-          email: email ?? this.email,
-          responsible: responsible ?? this.responsible,
-          id: id ?? this.id,
-          state: state ?? this.state);
+        state: state ?? this.state,
+        rol: rol ?? this.rol,
+        typeUser: typeUser ?? this.typeUser,
+        name: name ?? this.name,
+        lastName: lastName ?? this.lastName,
+        code: code ?? this.code,
+        email: email ?? this.email,
+        responsible: responsible ?? this.responsible,
+        id: id ?? this.id,
+        inscripcion: inscripcion ?? this.inscripcion,
+      );
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        state: json["state"],
         rol: IdName.fromJson(json["rol"]),
         typeUser: IdName.fromJson(json["typeUser"]),
         name: json["name"],
@@ -62,10 +68,11 @@ class UserModel {
         email: json["email"],
         responsible: IdName.fromJson(json["responsible"]),
         id: json["id"],
-        state: json["state"],
+        inscripcion: json["inscripcion"],
       );
 
   Map<String, dynamic> toJson() => {
+        "state": state,
         "rol": rol.toJson(),
         "typeUser": typeUser.toJson(),
         "name": name,
@@ -74,18 +81,18 @@ class UserModel {
         "email": email,
         "responsible": responsible.toJson(),
         "id": id,
-        "state": state,
+        "inscripcion": inscripcion,
       };
 }
 
 class IdName {
+  String id;
+  String name;
+
   IdName({
     required this.id,
     required this.name,
   });
-
-  String id;
-  String name;
 
   IdName copyWith({
     String? id,

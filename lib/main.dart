@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:gestion_projects/router/app_routes.dart';
+import 'package:gestion_projects/services/auth_service.dart';
 import 'package:gestion_projects/services/cafe_api.dart';
-import 'package:gestion_projects/views/admin/dashboard_layout.dart';
-import 'package:gestion_projects/views/layout.dart';
-import 'package:gestion_projects/views/pages/splash_layout.dart';
 import 'package:gestion_projects/provider/app_state.dart';
 import 'package:gestion_projects/provider/auth_provider.dart';
 import 'package:gestion_projects/provider/sidemenu_provider.dart';
-import 'package:gestion_projects/router/router.dart';
 import 'package:gestion_projects/services/local_storage.dart';
-import 'package:gestion_projects/services/notifications_service.dart';
 import 'package:gestion_projects/utils/style.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:qlevar_router/qlevar_router.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 import 'bloc/blocs.dart';
-import 'locator.dart';
-import 'services/navigation_service.dart';
 
 void main() async {
-  setupLocator();
-  Flurorouter.configureRoutes();
+  await LocalStorage.configurePrefs();
+
   WidgetsFlutterBinding.ensureInitialized();
   CafeApi.configureDio();
-  await LocalStorage.configurePrefs();
+  Get.lazyPut(() => AuthService());
+  // QR.setUrlStrategy();
   runApp(
     MultiBlocProvider(
         providers: [
@@ -40,12 +38,18 @@ void main() async {
           BlocProvider(create: (_) => PermisionBloc()),
           BlocProvider(create: (_) => RolBloc()),
           BlocProvider(create: (_) => TypeUserBloc()),
+          BlocProvider(create: (_) => ParallelBloc()),
+          BlocProvider(create: (_) => SuscribeBloc()),
         ],
-        child: MultiProvider(providers: [
-          ChangeNotifierProvider(lazy: false, create: (_) => AuthProvider()),
-          ChangeNotifierProvider(lazy: false, create: (_) => SideMenuProvider()),
-          ChangeNotifierProvider(create: (_) => AppState()),
-        ], child: const MyApp())),
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(lazy: false, create: (_) => AuthProvider()),
+            ChangeNotifierProvider(lazy: false, create: (_) => SideMenuProvider()),
+            ChangeNotifierProvider(create: (_) => AppState()),
+            ChangeNotifierProvider(create: (_) => AuthData()),
+          ],
+          child: const MyApp(),
+        )),
   );
 }
 
@@ -54,7 +58,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final appRoutes = AppRoutes();
+    appRoutes.setup();
+    return MaterialApp.router(
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -68,22 +74,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: styleLigth(),
       title: 'GESTION DE PROYECTOS',
-      initialRoute: '/',
-      onGenerateRoute: Flurorouter.router.generator,
-      navigatorKey: NavigationService.navigatorKey,
-      scaffoldMessengerKey: NotificationsService.messengerKey,
-      builder: (_, child) {
-        final authProvider = Provider.of<AuthProvider>(context);
-
-        if (authProvider.authStatus == AuthStatus.checking) return const SplashLayout();
-
-        if (authProvider.authStatus == AuthStatus.authenticated) {
-          debugPrint('ESTOY LOGUEADO');
-          return DashboardLayout(child: child!);
-        } else {
-          return LayoutScreen(child: child!);
-        }
-      },
+      routeInformationParser: const QRouteInformationParser(),
+      routerDelegate: QRouterDelegate(
+        appRoutes.routes,
+      ),
+      restorationScopeId: 'app',
     );
   }
 }

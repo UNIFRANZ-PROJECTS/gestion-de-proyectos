@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:gestion_projects/models/models.dart';
 
 part 'project_event.dart';
@@ -15,7 +18,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
   _onUpdateProjectById(UpdateItemProject project, Emitter<ProjectState> emit) async {
     List<ProjectModel> listProject = [...state.listProject];
-    listProject[listProject.indexWhere((e) => e.id == project.project.id)] = project.project;
+    listProject[listProject.indexWhere((e) => e.project.id == project.project.project.id)] = project.project;
+    debugPrint('=============update');
+    debugPrint(json.encode(listProject));
+    debugPrint('=============update');
     emit(state.copyWith(listProject: listProject));
   }
 }

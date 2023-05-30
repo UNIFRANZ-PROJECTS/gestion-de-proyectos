@@ -21,7 +21,7 @@ class DialogAction extends StatelessWidget {
         message,
         textAlign: TextAlign.center,
       ),
-      actions: <Widget>[ButtonComponent(text: 'Aceptar', onPressed: () => Navigator.pop(context))],
+      actions: [ButtonComponent(text: 'Aceptar', onPressed: () => Navigator.pop(context))],
     ));
   }
 }
@@ -37,33 +37,27 @@ class DialogOneFunction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: _onBackPressed,
-        child: FadeIn(
-            child: AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: Column(
-            children: [
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                message,
-                textAlign: TextAlign.justify,
-              ),
-            ],
+    return FadeIn(
+        child: AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      title: Column(
+        children: [
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          actions: <Widget>[ButtonComponent(text: textButton, onPressed: () => onPressed())],
-        )));
-  }
-
-  Future<bool> _onBackPressed() async {
-    return false;
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            message,
+            textAlign: TextAlign.justify,
+          ),
+        ],
+      ),
+      actions: <Widget>[ButtonComponent(text: textButton, onPressed: () => onPressed())],
+    ));
   }
 }
 

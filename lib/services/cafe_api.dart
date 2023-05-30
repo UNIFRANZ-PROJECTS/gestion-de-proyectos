@@ -57,7 +57,7 @@ class CafeApi {
     }
   }
 
-  static Future post(String path, FormData? data) async {
+  static Future post(String path, Map<String, dynamic> data) async {
     try {
       debugPrint('==========================================');
       debugPrint('== body $data');
@@ -72,7 +72,7 @@ class CafeApi {
     }
   }
 
-  static Future put(String path, FormData? data) async {
+  static Future put(String path, Map<String, dynamic> data) async {
     try {
       debugPrint('==========================================');
       debugPrint('== body $data');

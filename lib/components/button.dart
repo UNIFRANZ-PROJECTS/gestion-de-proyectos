@@ -14,7 +14,7 @@ class ButtonComponent extends StatelessWidget {
       child: MaterialButton(
         minWidth: 200,
         padding: const EdgeInsets.symmetric(vertical: 19),
-        color: const Color(0xffFC5000),
+        color: const Color(0xffF0C85D),
         disabledColor: Colors.grey,
         onPressed: onPressed,
         child: stateLoading
@@ -29,7 +29,7 @@ class ButtonComponent extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.black,
                     )),
               ),
       ),

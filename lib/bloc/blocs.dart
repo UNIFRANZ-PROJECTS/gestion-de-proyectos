@@ -10,3 +10,5 @@ export 'package:gestion_projects/bloc/type_project/type_project_bloc.dart';
 export 'package:gestion_projects/bloc/requirement/requirement_bloc.dart';
 export 'package:gestion_projects/bloc/stage/stage_bloc.dart';
 export 'package:gestion_projects/bloc/season/season_bloc.dart';
+export 'package:gestion_projects/bloc/parallel/parallel_bloc.dart';
+export 'package:gestion_projects/bloc/suscribe/suscribe_bloc.dart';

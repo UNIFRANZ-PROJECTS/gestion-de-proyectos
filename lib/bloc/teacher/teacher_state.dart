@@ -26,5 +26,9 @@ class TeacherState extends Equatable {
         sortColumnIndex: sortColumnIndex ?? this.sortColumnIndex,
       );
   @override
-  List<Object> get props => [listTeacher, isLoading, ascending];
+  List<Object> get props => [
+        listTeacher,
+        isLoading,
+        ascending,
+      ];
 }
