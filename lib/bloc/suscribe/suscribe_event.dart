@@ -24,3 +24,16 @@ class UpdateItemSuscribe extends SuscribeEvent {
 
   const UpdateItemSuscribe(this.suscribe);
 }
+
+//
+class UpdateListStudentsDebt extends SuscribeEvent {
+  final List<UserModel> listUser;
+
+  const UpdateListStudentsDebt(this.listUser);
+}
+
+class RemoveItemStudentDebt extends SuscribeEvent {
+  final String userId;
+
+  const RemoveItemStudentDebt(this.userId);
+}

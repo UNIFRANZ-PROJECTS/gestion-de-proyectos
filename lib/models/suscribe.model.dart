@@ -9,6 +9,10 @@ SuscribeModel suscribeModelFromJson(String str) => SuscribeModel.fromJson(json.d
 String suscribeModelToJson(SuscribeModel data) => json.encode(data.toJson());
 
 class SuscribeModel {
+  String url;
+  int total;
+  int amountDelivered;
+  int returnedAmount;
   bool state;
   String season;
   Responsible student;
@@ -18,6 +22,10 @@ class SuscribeModel {
   String id;
 
   SuscribeModel({
+    required this.url,
+    required this.total,
+    required this.amountDelivered,
+    required this.returnedAmount,
     required this.state,
     required this.season,
     required this.student,
@@ -28,6 +36,10 @@ class SuscribeModel {
   });
 
   SuscribeModel copyWith({
+    String? url,
+    int? total,
+    int? amountDelivered,
+    int? returnedAmount,
     bool? state,
     String? season,
     Responsible? student,
@@ -37,6 +49,10 @@ class SuscribeModel {
     String? id,
   }) =>
       SuscribeModel(
+        url: url ?? this.url,
+        total: total ?? this.total,
+        amountDelivered: amountDelivered ?? this.amountDelivered,
+        returnedAmount: returnedAmount ?? this.returnedAmount,
         state: state ?? this.state,
         season: season ?? this.season,
         student: student ?? this.student,
@@ -47,6 +63,10 @@ class SuscribeModel {
       );
 
   factory SuscribeModel.fromJson(Map<String, dynamic> json) => SuscribeModel(
+        url: json["url"],
+        total: json["total"],
+        amountDelivered: json["amountDelivered"],
+        returnedAmount: json["returnedAmount"],
         state: json["state"],
         season: json["season"],
         student: Responsible.fromJson(json["student"]),
@@ -57,6 +77,10 @@ class SuscribeModel {
       );
 
   Map<String, dynamic> toJson() => {
+        "url": url,
+        "total": total,
+        "amountDelivered": amountDelivered,
+        "returnedAmount": returnedAmount,
         "state": state,
         "season": season,
         "student": student.toJson(),

@@ -173,7 +173,6 @@ class _SubjectViewState extends State<SubjectView> {
     return CafeApi.put(subjects(subject.id), body).then((res) async {
       final categoryEdit = subjectModelFromJson(json.encode(res.data['subject']));
       subjectBloc.add(UpdateItemSubject(categoryEdit));
-      Navigator.pop(context);
     }).catchError((e) {
       debugPrint('error en en : ${e.response.data['errors'][0]['msg']}');
       callDialogAction(context, '${e.response.data['errors'][0]['msg']}');

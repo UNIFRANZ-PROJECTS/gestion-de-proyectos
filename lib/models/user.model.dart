@@ -18,7 +18,6 @@ class UserModel {
   String email;
   IdName responsible;
   String id;
-  bool inscripcion;
 
   UserModel({
     required this.state,
@@ -30,7 +29,6 @@ class UserModel {
     required this.email,
     required this.responsible,
     required this.id,
-    required this.inscripcion,
   });
 
   UserModel copyWith({
@@ -43,7 +41,6 @@ class UserModel {
     String? email,
     IdName? responsible,
     String? id,
-    bool? inscripcion,
   }) =>
       UserModel(
         state: state ?? this.state,
@@ -55,7 +52,6 @@ class UserModel {
         email: email ?? this.email,
         responsible: responsible ?? this.responsible,
         id: id ?? this.id,
-        inscripcion: inscripcion ?? this.inscripcion,
       );
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -68,7 +64,6 @@ class UserModel {
         email: json["email"],
         responsible: IdName.fromJson(json["responsible"]),
         id: json["id"],
-        inscripcion: json["inscripcion"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -81,7 +76,6 @@ class UserModel {
         "email": email,
         "responsible": responsible.toJson(),
         "id": id,
-        "inscripcion": inscripcion,
       };
 }
 

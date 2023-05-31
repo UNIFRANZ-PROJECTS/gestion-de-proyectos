@@ -34,5 +34,9 @@ String seasons(String? id) => '/season/${id ?? ''}';
 String seasonEnable(String id) => '/season/enable/$id';
 //inscripciones
 String suscribeStudent(String? id) => '/suscribe/${id ?? ''}';
+String suscribeStudentsDebt() => '/suscribe/studentsdebt';
+String suscribeById(String id) => '/suscribe/print/$id';
+String suscribeFilter() => '/suscribe/filter';
+String reportsSuscribeDownload() => '/suscribe/report';
 //paralelos
 String parallels(String? id) => '/parallel/${id ?? ''}';

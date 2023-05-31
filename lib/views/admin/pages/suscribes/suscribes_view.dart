@@ -11,6 +11,7 @@ import 'package:gestion_projects/views/admin/pages/suscribes/add_suscribe.dart';
 import 'package:gestion_projects/views/admin/pages/suscribes/suscribes_datasource.dart';
 import 'package:gestion_projects/services/cafe_api.dart';
 import 'package:gestion_projects/services/services.dart';
+import 'package:printing/printing.dart';
 
 class SuscribesView extends StatefulWidget {
   const SuscribesView({super.key});
@@ -21,18 +22,47 @@ class SuscribesView extends StatefulWidget {
 
 class _SuscribesViewState extends State<SuscribesView> {
   TextEditingController searchCtrl = TextEditingController();
+  bool stateLoading = false;
   bool searchState = false;
+  double? price;
+  String hintTextDate = 'Rango de fechas del evento';
+  DateTime? startDate;
+  DateTime? endDate;
   @override
   void initState() {
-    super.initState();
+    callAllSeasons();
     callAllSuscribes();
+    callAllUsersDebt();
+    super.initState();
+  }
+
+  callAllSeasons() async {
+    CafeApi.configureDio();
+    final seasonBloc = BlocProvider.of<SeasonBloc>(context, listen: false);
+    return CafeApi.httpGet(seasons(null)).then((res) async {
+      debugPrint('todas las temporadas ${json.encode(res.data['temporadas'])}');
+      final season = listSeasonModelFromJson(json.encode(res.data['temporadas']));
+      debugPrint('length ${season.length}');
+      seasonBloc.add(UpdateListSeason(season));
+    });
   }
 
   callAllSuscribes() async {
+    debugPrint('TODAS LAS INSCRIPCIONES');
     final suscribeBloc = BlocProvider.of<SuscribeBloc>(context, listen: false);
     CafeApi.configureDio();
     return CafeApi.httpGet(suscribeStudent(null)).then((res) async {
+      debugPrint('todas las inscripciones ${res.data['season']}');
+      setState(() => price = res.data['season']['price']);
       suscribeBloc.add(UpdateListSuscribe(listSuscribeModelFromJson(json.encode(res.data['suscribes']))));
+    });
+  }
+
+  callAllUsersDebt() async {
+    final suscribeBloc = BlocProvider.of<SuscribeBloc>(context, listen: false);
+    CafeApi.configureDio();
+    return CafeApi.httpGet(suscribeStudentsDebt()).then((res) async {
+      suscribeBloc.add(UpdateListStudentsDebt(listUserModelFromJson(json.encode(res.data['students']))));
     });
   }
 
@@ -69,9 +99,27 @@ class _SuscribesViewState extends State<SuscribesView> {
                   }
                 },
               ),
-              ButtonComponent(text: 'Inscribir', onPressed: () => showCreateSuscribe(context)),
+              if (price != null) ButtonComponent(text: 'Inscribir', onPressed: () => showCreateSuscribe(context)),
             ],
           ),
+          if (price != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DateTimeWidget(
+                    labelText: 'Fechas:',
+                    hintText: hintTextDate,
+                    selectDate: (value1, value2) {
+                      setState(() {
+                        startDate = DateTime.parse(value1);
+                        endDate = DateTime.parse(value2);
+                        hintTextDate = value1 == value2 ? value1 : '$value1 - $value2';
+                      });
+                      return showFilter(context);
+                    }),
+                ButtonComponent(text: 'Descargar xlxs', onPressed: () => downloadReport(context)),
+              ],
+            ),
           Expanded(
             child: ListView(
               children: [
@@ -84,8 +132,10 @@ class _SuscribesViewState extends State<SuscribesView> {
                         onSort: (index, _) {
                           // suscribeBloc.add(UpdateSortColumnIndexTypeUser(index));
                         }),
+                    const DataColumn(label: Text('Código')),
                     const DataColumn(label: Text('Responsable')),
                     const DataColumn(label: Text('Fecha')),
+                    const DataColumn(label: Text('Monto')),
                     const DataColumn(label: Text('Acciones')),
                   ],
                   source: usersDataSource,
@@ -98,46 +148,52 @@ class _SuscribesViewState extends State<SuscribesView> {
           )
         ]));
   }
-  // dialogInscription(UserModel user) {
-  //   showDialog(
-  //       barrierDismissible: false,
-  //       context: context,
-  //       builder: (BuildContext context) => DialogOneFunction(
-  //             title: 'Inscripción',
-  //             message: !user.inscripcion
-  //                 ? '¿Desea inscribir al estudiante ${user.code}?'
-  //                 : '¿Desea eliminar la inscripción del estudiante${user.code}?',
-  //             textButton: 'Inscribir',
-  //             onPressed: () => !user.inscripcion ? suscribe(user) : unsuscribe(user),
-  //           ));
-  // }
 
-  // suscribe(UserModel user) {
-  //   final userBloc = BlocProvider.of<UserBloc>(context, listen: false);
-  //   final seasonBloc = BlocProvider.of<SeasonBloc>(context, listen: false).state.listSeason.firstWhere((e) => e.state);
-  //   CafeApi.configureDio();
-  //   FocusScope.of(context).unfocus();
-  //   final Map<String, dynamic> body = {
-  //     'season': seasonBloc.id,
-  //     'student': user.id,
-  //   };
-  //   return CafeApi.post(suscribeStudent(null), body).then((res) async {
-  //     final user = userModelFromJson(json.encode(res.data['student']));
-  //     userBloc.add(UpdateItemUser(user));
-  //     debugPrint(' ressssss ${json.encode(res.data['document'])}');
-  //     final bytes = base64Decode(res.data['document']);
-  //     await Printing.sharePdf(bytes: bytes, filename: 'documento.pdf');
-  //     Navigator.pop(context);
-  //   }).catchError((e) {
-  //     debugPrint('e $e');
-  //     debugPrint('error en en : ${e.response.data['errors'][0]['msg']}');
-  //     callDialogAction(context, '${e.response.data['errors'][0]['msg']}');
-  //   });
-  // }
-  printDocument(BuildContext context, SuscribeModel suscribe) {}
+  showFilter(BuildContext context) {
+    // setState(() => stateLoading = !stateLoading);
+    final suscribeBloc = BlocProvider.of<SuscribeBloc>(context, listen: false);
+    debugPrint('obteniendo toda la info para reportes');
+    CafeApi.configureDio();
+    final Map<String, dynamic> body = {
+      'start': '$startDate',
+      'end': '$endDate',
+    };
+    return CafeApi.post(suscribeFilter(), body).then((res) async {
+      // setState(() => stateLoading = !stateLoading);
+      debugPrint('todas las inscripciones ${res.data}');
+      suscribeBloc.add(UpdateListSuscribe(listSuscribeModelFromJson(json.encode(res.data['suscribes']))));
+    }).catchError((err) {
+      debugPrint(err);
+      setState(() => stateLoading = !stateLoading);
+    });
+  }
+
+  downloadReport(BuildContext context) {
+    debugPrint('obteniendo toda la info para dashboar');
+    CafeApi.configureDio();
+    final Map<String, dynamic> body = {
+      'start': '$startDate',
+      'end': '$endDate',
+    };
+    return CafeApi.post(reportsSuscribeDownload(), body).then((res) async {
+      debugPrint(' ressssss ${json.encode(res.data['base64'])}');
+      final bytes = base64Decode(res.data['base64']);
+      await Printing.sharePdf(bytes: bytes, filename: 'reporte.xlsx');
+    });
+  }
+
+  printDocument(BuildContext context, SuscribeModel suscribe) {
+    CafeApi.configureDio();
+    return CafeApi.httpGet(suscribeById(suscribe.id)).then((res) async {
+      debugPrint(' ressssss ${res.data}');
+      final bytes = base64Decode(res.data['document']);
+      await Printing.sharePdf(bytes: bytes, filename: 'documento.pdf');
+    });
+  }
+
   showCreateSuscribe(BuildContext context) {
     return showDialog(
-        context: context, builder: (BuildContext context) => const DialogWidget(component: AddSuscribeForm()));
+        context: context, builder: (BuildContext context) => DialogWidget(component: AddSuscribeForm(price: price!)));
   }
 
   deleteSuscribe(SuscribeModel suscribe, bool state) {

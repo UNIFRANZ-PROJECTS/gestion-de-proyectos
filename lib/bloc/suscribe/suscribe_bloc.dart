@@ -12,6 +12,11 @@ class SuscribeBloc extends Bloc<SuscribeEvent, SuscribeState> {
       emit(state.copyWith(listSuscribe: [...state.listSuscribe, event.suscribe]));
     });
     on<UpdateItemSuscribe>(((event, emit) => _onUpdateSuscribeById(event, emit)));
+    //
+
+    on<UpdateListStudentsDebt>((event, emit) => emit(state.copyWith(listUser: event.listUser)));
+    on<RemoveItemStudentDebt>(
+        (event, emit) => emit(state.copyWith(listUser: [...state.listUser.where((e) => e.id != event.userId)])));
   }
   _onUpdateSuscribeById(UpdateItemSuscribe suscribe, Emitter<SuscribeState> emit) async {
     List<SuscribeModel> listSuscribe = [...state.listSuscribe];
